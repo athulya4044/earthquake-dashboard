@@ -12,7 +12,7 @@
 .loader div {
   width: 0.5rem;
   height: 0.5rem;
-  background-color: #3b82f6; /* Tailwind blue-500 */
+  background-color: #06714f;
   border-radius: 9999px;
   animation: bounce 0.6s infinite alternate;
 }

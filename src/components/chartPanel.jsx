@@ -1,3 +1,5 @@
+// This component displays a scatter plot of earthquake data using Recharts.
+import { useState } from "react";
 import {
   ScatterChart,
   Scatter,
@@ -7,98 +9,105 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { useState } from "react";
 
-export default function ChartPanel({ data, selectedQuake }) {
-  // Local state for axis selections
-  const [xAxis, setXAxis] = useState("mag");
-  const [yAxis, setYAxis] = useState("depth");
+export default function ChartPanel({ data, selectedQuake, setSelectedQuake }) {
+  const [axisPair, setAxisPair] = useState("magVsDepth");
+
+  // Determine xAxis and yAxis based on the selected axis pair
+  const axisConfig = {
+    magVsDepth: { xAxis: "mag", yAxis: "depth" },
+    depthVsMag: { xAxis: "depth", yAxis: "mag" },
+  };
+
+  const { xAxis, yAxis } = axisConfig[axisPair];
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow">
-      {/* Title */}
-         {/* Dropdowns */}
-      <div className="flex gap-4 mb-4">
+    <div className="bg-white rounded-xl p-6 shadow">
+      <div className="flex justify-end gap-4 mb-4">
         <div>
-          <label className="block text-xs text-gray-500 uppercase mb-1">
-            X-Axis
+          <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">
+            Axes
           </label>
           <select
-            value={xAxis}
-            onChange={(e) => setXAxis(e.target.value)}
-            className="border rounded p-1"
+            value={axisPair}
+            onChange={(e) => setAxisPair(e.target.value)}
+            className="appearance-none rounded-xl px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 shadow-inner"
           >
-            <option value="mag">Magnitude</option>
-            <option value="depth">Depth</option>
-            <option value="gap">Gap</option>
-            <option value="dmin">Dmin</option>
-            {/* More options if needed */}
-          </select>
-        </div>
-        <div>
-          <label className="block text-xs text-gray-500 uppercase mb-1">
-            Y-Axis
-          </label>
-          <select
-            value={yAxis}
-            onChange={(e) => setYAxis(e.target.value)}
-            className="border rounded p-1"
-          >
-            <option value="depth">Depth</option>
-            <option value="mag">Magnitude</option>
-            <option value="gap">Gap</option>
-            <option value="dmin">Dmin</option>
-            {/* More options if needed */}
+            <option value="magVsDepth">Magnitude vs Depth</option>
+            <option value="depthVsMag">Depth vs Magnitude</option>
           </select>
         </div>
       </div>
 
-      {/* Scatter Chart */}
-      <ResponsiveContainer width="100%" height={400}>
-        <ScatterChart margin={{ top: 20, right: 30, bottom: 20, left: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-          <XAxis
-            type="number"
-            dataKey={xAxis}
-            name={xAxis}
-            tick={{ fill: "#4a5568", fontSize: 12 }}
-            label={{
-              value: xAxis,
-              position: "insideBottom",
-              offset: -5,
-              fill: "#4a5568",
-            }}
-          />
-          <YAxis
-            type="number"
-            dataKey={yAxis}
-            name={yAxis}
-            tick={{ fill: "#4a5568", fontSize: 12 }}
-            label={{
-              value: yAxis,
-              angle: -90,
-              position: "insideLeft",
-              fill: "#4a5568",
-            }}
-          />
-          <Tooltip />
-          <Scatter
-            data={data}
-            shape={({ cx, cy, payload }) => {
-              const isSelected =
-                selectedQuake && payload.time === selectedQuake.time;
-              return (
-                <circle
-                  cx={cx}
-                  cy={cy}
-                  r={isSelected ? 8 : 4}
-                  fill={isSelected ? "#ef4444" : "#3182ce"}
-                />
-              );
-            }}
-          />
-        </ScatterChart>
-      </ResponsiveContainer>
+      <div className="bg-[#f9fafb] rounded-xl p-4">
+        <ResponsiveContainer width="100%" height={320}>
+          <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#e5e7eb"
+              vertical={false}
+            />
+            <XAxis
+              type="number"
+              dataKey={xAxis}
+              tick={{ fill: "#9ca3af", fontSize: 12 }}
+              axisLine={false}
+              tickLine={false}
+              label={{
+                value: xAxis,
+                position: "insideBottom",
+                offset: -8,
+                fill: "#6b7280",
+              }}
+            />
+            <YAxis
+              type="number"
+              dataKey={yAxis}
+              tick={{ fill: "#9ca3af", fontSize: 12 }}
+              axisLine={false}
+              tickLine={false}
+              label={{
+                value: yAxis,
+                angle: -90,
+                position: "insideLeft",
+                offset: -5,
+                fill: "#6b7280",
+              }}
+            />
+            <Tooltip
+              contentStyle={{
+                background: "#fff",
+                border: "1px solid #e5e7eb",
+                borderRadius: "8px",
+                fontSize: "0.875rem",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+              }}
+              itemStyle={{ color: "#374151" }}
+              cursor={{ stroke: "#d1d5db", strokeWidth: 1 }}
+            />
+            <Scatter
+              data={data}
+              shape={({ cx, cy, payload }) => {
+                const isSelected =
+                  selectedQuake && payload.time === selectedQuake.time; // Check if this is selected
+                return (
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r={isSelected ? 10 : 6}
+                    fill={isSelected ? "#f97316" : "#22c55e"}
+                    stroke="#fff"
+                    strokeWidth="1.5"
+                    opacity={0.85}
+                    className="transition-all duration-300 ease-in-out cursor-pointer"
+                    onMouseOver={() => setSelectedQuake(payload)}
+                  />
+                );
+              }}
+            />
+          </ScatterChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }

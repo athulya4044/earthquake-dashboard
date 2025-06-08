@@ -1,12 +1,22 @@
-# React + Vite
+Earthquake Dashboard
+----------------------
+Hey ! This is a little project I put together to explore and visualize earthquake data. It’s built with React, Recharts, and Tailwind CSS. You can view a scatter plot of earthquake events and see all the data in a table below. If you hover on a chart point, the table will jump right to that row and highlight and vice versa.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+How to Run
+-----------
+1. Clone the repo :
+   git clone https://github.com/athulya4044/earthquake-dashboard.git
+   cd earthquake-dashboard
 
-Currently, two official plugins are available:
+2. Install the dependencies:
+   npm install
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+3. Start the application:
+   npm run dev
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+External Dependencies
+---------------------
+--Recharts (^2.15.3) – For creating the scatter plot.
+--Tailwind CSS (^3.4.17) – For styling.
+--PapaParse (^5.5.3) – For parsing earthquake CSV data into usable JSON.
+--Lucide React (^0.513.0) – For icons.

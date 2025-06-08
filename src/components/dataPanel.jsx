@@ -1,4 +1,24 @@
+// This component displays the earthquake data in a table format.
+// It highlights the selected earthquake and scrolls to it when selected.
+
+import { useEffect, useRef } from "react";
+
 export default function DataPanel({ data, selectedQuake, setSelectedQuake }) {
+  const rowRefs = useRef([]);
+
+  useEffect(() => {
+    if (selectedQuake) {
+      const index = data.findIndex((row) => row.time === selectedQuake.time);
+      if (index !== -1 && rowRefs.current[index]) {
+        rowRefs.current[index].scrollIntoView({
+          // Scroll to the selected row
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
+  }, [selectedQuake, data]);
+
   if (!data || data.length === 0) {
     return <div className="p-4">No data to display.</div>;
   }
@@ -7,9 +27,7 @@ export default function DataPanel({ data, selectedQuake, setSelectedQuake }) {
 
   return (
     <div>
-      {/* <h2 className="text-xl font-bold mb-4">Data Panel</h2> */}
-
-      <div className="bg-white rounded-lg shadow overflow-auto max-h-[31.25rem]">
+      <div className="bg-white rounded-2xl shadow overflow-auto max-h-[29.75rem]">
         <table className="min-w-full text-sm text-left text-gray-800">
           <thead className="bg-slate-100 text-gray-600 uppercase text-xs sticky top-0 z-10 shadow">
             <tr>
@@ -22,14 +40,15 @@ export default function DataPanel({ data, selectedQuake, setSelectedQuake }) {
           </thead>
           <tbody className="divide-y divide-gray-200">
             {data.map((row, index) => {
-              const isSelected =
+              const isSelected = // Check if the current row is the selected earthquake
                 selectedQuake && selectedQuake.time === row.time;
               return (
                 <tr
                   key={index}
-                  onClick={() => setSelectedQuake(row)}
+                  ref={(el) => (rowRefs.current[index] = el)}
+                  onMouseOver={() => setSelectedQuake(row)}
                   className={`cursor-pointer transition-colors ${
-                    isSelected ? "bg-blue-100" : "hover:bg-slate-50"
+                    isSelected ? "bg-green-100" : "hover:bg-slate-50"
                   }`}
                 >
                   {keyColumns.map((header) => (
@@ -48,66 +67,3 @@ export default function DataPanel({ data, selectedQuake, setSelectedQuake }) {
     </div>
   );
 }
-// import { FixedSizeList as List } from "react-window";
-
-// export default function DataPanel({
-//   data,
-//   selectedQuake,
-//   setSelectedQuake,
-// }) {
-//   const keyColumns = ["time", "mag", "depth", "place"];
-//   const Row = ({ index, style }) => {
-//     const row = data[index];
-//     const isSelected =
-//       selectedQuake && selectedQuake.time === row.time;
-
-//     return (
-//       <tr
-//         style={style}
-//         onClick={() => setSelectedQuake(row)}
-//         className={`cursor-pointer transition-colors ${
-//           isSelected ? "bg-blue-100" : "hover:bg-slate-50"
-//         }`}
-//       >
-//         {keyColumns.map((header) => (
-//           <td key={header} className="px-4 py-3 whitespace-nowrap">
-//             {header === "time"
-//               ? new Date(row[header]).toLocaleString()
-//               : row[header]}
-//           </td>
-//         ))}
-//       </tr>
-//     );
-//   };
-
-//   return (
-//     <div>
-   
-//       <div className="bg-white rounded-lg shadow overflow-auto">
-//         <table className="min-w-full text-sm text-left text-gray-800">
-//           <thead className="bg-slate-100 text-gray-600 uppercase text-xs sticky top-0 z-10 shadow">
-//   <tr>
-//     <th className="px-4 py-3 w-1/4">TIME</th>
-//     <th className="px-4 py-3 w-1/6">MAG</th>
-//     <th className="px-4 py-3 w-1/6">DEPTH</th>
-//     <th className="px-4 py-3 w-1/3">PLACE</th>
-//   </tr>
-// </thead>
-// <tbody className="divide-y divide-gray-200">
-//   {/* rows */}
-// </tbody>
-
-//         </table>
-
-//         <List
-//           height={400} // Adjust based on how many rows you want visible at once
-//           itemCount={data.length}
-//           itemSize={40} // Adjust row height
-//           width="100%"
-//         >
-//           {Row}
-//         </List>
-//       </div>
-//     </div>
-//   );
-// }

@@ -1,3 +1,4 @@
+// This hook fetches earthquake data from the USGS API.
 import { useState, useEffect } from "react";
 import Papa from "papaparse";
 
@@ -19,19 +20,12 @@ export function useEarthquakeData() {
           header: true,
           skipEmptyLines: true,
           dynamicTyping: true,
-          worker: true, // Use a web worker for faster parsing!
+          worker: true,
           complete: (results) => {
-            const slicedData = results.data.slice(0, 25); // Limit to 25 rows for speed
-            console.table(slicedData);
+            const slicedData = results.data.slice(0, 25); // Limit to 25 records
             setData(slicedData);
             setLoading(false);
-          },
-//           complete: (results) => {
-//   console.table(results.data);
-//   setData(results.data);
-//   setLoading(false);
-// }
-
+          },      
         });
       } catch (err) {
         console.error("Error fetching data:", err);
